@@ -14,4 +14,6 @@
     NSString *clientID;
     NSString *clientSecret;
 }
++ (void)initWithAccessCode: (NSString *) code;
++ (void)refreshToken;
 @end
