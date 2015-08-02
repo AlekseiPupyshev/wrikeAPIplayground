@@ -18,3 +18,5 @@
                 withSecret: (NSString *) clientSecret;
 + (void)refreshToken;
 @end
+@implementation OAuth2Credentials
+@end
