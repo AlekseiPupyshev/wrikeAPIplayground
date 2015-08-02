@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		44CEF6821B6E14DB00A456CD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CEF6811B6E14DB00A456CD /* main.m */; };
 		44CEF6891B6E153000A456CD /* wrikeSDK.m in Sources */ = {isa = PBXBuildFile; fileRef = 44CEF6881B6E153000A456CD /* wrikeSDK.m */; };
+		6D9009A2AD0023E6CBFFE6A4 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CB00D02A8428E51089F05CAC /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,6 +28,9 @@
 		44CEF67E1B6E14DB00A456CD /* wrikeAPIplayground */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = wrikeAPIplayground; sourceTree = BUILT_PRODUCTS_DIR; };
 		44CEF6811B6E14DB00A456CD /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		44CEF6881B6E153000A456CD /* wrikeSDK.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = wrikeSDK.m; sourceTree = "<group>"; };
+		4CFE202E5D872082B13D8646 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		9095F3A40AEAB212C8D8200B /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		CB00D02A8428E51089F05CAC /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -34,6 +38,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6D9009A2AD0023E6CBFFE6A4 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -45,6 +50,8 @@
 			children = (
 				44CEF6801B6E14DB00A456CD /* wrikeAPIplayground */,
 				44CEF67F1B6E14DB00A456CD /* Products */,
+				782D96DD4D39531D57AA729B /* Pods */,
+				FB855623F637DC1F4B4DE4F7 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -65,6 +72,23 @@
 			path = wrikeAPIplayground;
 			sourceTree = "<group>";
 		};
+		782D96DD4D39531D57AA729B /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9095F3A40AEAB212C8D8200B /* Pods.debug.xcconfig */,
+				4CFE202E5D872082B13D8646 /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		FB855623F637DC1F4B4DE4F7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CB00D02A8428E51089F05CAC /* libPods.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -72,9 +96,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 44CEF6851B6E14DB00A456CD /* Build configuration list for PBXNativeTarget "wrikeAPIplayground" */;
 			buildPhases = (
+				1FEFDCBD25B80694D0B1229D /* Check Pods Manifest.lock */,
 				44CEF67A1B6E14DB00A456CD /* Sources */,
 				44CEF67B1B6E14DB00A456CD /* Frameworks */,
 				44CEF67C1B6E14DB00A456CD /* CopyFiles */,
+				F7EF27E6FC38EBCA58548061 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -115,6 +141,39 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1FEFDCBD25B80694D0B1229D /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		F7EF27E6FC38EBCA58548061 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		44CEF67A1B6E14DB00A456CD /* Sources */ = {
@@ -208,6 +267,7 @@
 		};
 		44CEF6861B6E14DB00A456CD /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9095F3A40AEAB212C8D8200B /* Pods.debug.xcconfig */;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -215,6 +275,7 @@
 		};
 		44CEF6871B6E14DB00A456CD /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4CFE202E5D872082B13D8646 /* Pods.release.xcconfig */;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -239,6 +300,7 @@
 				44CEF6871B6E14DB00A456CD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
