@@ -14,6 +14,7 @@
     NSString *clientID;
     NSString *clientSecret;
 }
-+ (void)initWithAccessCode: (NSString *) code;
++ (void)initWithAccessCode: (NSString *) code withClientID: (NSString *) clientID
+                withSecret: (NSString *) clientSecret;
 + (void)refreshToken;
 @end
