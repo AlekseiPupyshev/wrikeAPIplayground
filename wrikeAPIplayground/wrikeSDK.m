@@ -83,23 +83,13 @@
     NSString* ID;
     NSString* title;
     NSString* description;
-    NSArray* sharedIDs;
     NSArray* parentIDs;
-    NSString* scope;
-    NSURL* permalink;
-    NSString* workflowID;
-    NSArray* childIDs;
 }
 
 -(void) initFullWithID: (NSString*) IDM
              withTitle: (NSString*) titleM
        withDescription: (NSString*) descriptionM
-         withSharedIDs: (NSArray*) sharedIDsM
-         withParentIDs: (NSArray*) parentIDsM
-             withScope: (NSString*) scopeM
-         withPermalink: (NSURL*) permalinkM
-        withWorkflowID: (NSString*) workflowIDM
-          withChildIDs: (NSArray*) childIDsM;
+         withParentIDs: (NSArray*) parentIDsM;
 
 -(void) initForTreeWithID: (NSString*) IDM
                 withTitle: (NSString*) titleM
@@ -111,20 +101,11 @@
 -(void) initWithID: (NSString *) IDM
          withTitle: (NSString *) titleM
    withDescription: (NSString *) descriptionM
-     withSharedIDs: (NSArray *) sharedIDsM
-     withParentIDs: (NSArray *) parentIDsM
-         withScope: (NSString *) scopeM
-     withPermalink: (NSURL *) permalinkM
-    withWorkflowID: (NSString *) workflowIDM
-      withChildIDs: (NSArray *) childIDsM {
+     withParentIDs: (NSArray *) parentIDsM {
     ID = IDM;
     title = titleM;
     description = descriptionM;
-    [sharedIDs arrayByAddingObjectsFromArray: sharedIDsM];
     [parentIDs arrayByAddingObjectsFromArray: parentIDsM];
-    scope = scopeM;
-    permalink = permalinkM;
-    workflowID = workflowIDM;
     childIDs = childIDsM;
 }
 

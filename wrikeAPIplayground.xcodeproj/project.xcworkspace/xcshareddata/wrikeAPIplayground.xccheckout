@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>E095DF77-13A4-43CF-A940-7E836F384AA8</string>
 	<key>IDESourceControlProjectName</key>
-	<string>project</string>
+	<string>wrikeAPIplayground</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>A2AE25F30C0C74474312A2477629226FE52CABD0</key>
 		<string>https://github.com/AlekseiPupyshev/wrikeAPIplayground.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>wrikeAPIplayground.xcodeproj/project.xcworkspace</string>
+	<string>wrikeAPIplayground.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>A2AE25F30C0C74474312A2477629226FE52CABD0</key>
