@@ -1,0 +1,1 @@
+RESTKIT_OTHER_LDFLAGS = -framework "CoreData" -framework "CoreServices" -framework "Security" -framework "SystemConfiguration"
