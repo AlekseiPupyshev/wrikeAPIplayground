@@ -25,6 +25,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		442331D71B715CF600140DD3 /* wrikeModels.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = wrikeModels.h; sourceTree = "<group>"; };
 		44CEF67E1B6E14DB00A456CD /* wrikeAPIplayground */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = wrikeAPIplayground; sourceTree = BUILT_PRODUCTS_DIR; };
 		44CEF6811B6E14DB00A456CD /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		44CEF6881B6E153000A456CD /* wrikeSDK.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = wrikeSDK.m; sourceTree = "<group>"; };
@@ -68,6 +69,7 @@
 			children = (
 				44CEF6811B6E14DB00A456CD /* main.m */,
 				44CEF6881B6E153000A456CD /* wrikeSDK.m */,
+				442331D71B715CF600140DD3 /* wrikeModels.h */,
 			);
 			path = wrikeAPIplayground;
 			sourceTree = "<group>";

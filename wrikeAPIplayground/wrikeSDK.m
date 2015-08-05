@@ -57,27 +57,6 @@
 
 @end
 
-// Коллекция ветки папок
-@interface FolderTreeCollection : NSObject {
-    NSMutableArray* collection;
-}
-
--(void) addToFolderToTree: (FolderModel*) folder;
--(NSMutableArray*) getFolderTree;
-
-@end
-@implementation FolderTreeCollection
-
--(void) addToFolderToTree: (FolderModel*) folder {
-    [collection addObject: folder];
-}
-
--(NSMutableArray*) getFolderTree {
-    return collection;
-}
-
-@end
-
 // Модель папки
 @interface FolderModel : NSObject {
     NSString* ID;
@@ -110,6 +89,29 @@
 }
 
 @end
+
+// Коллекция ветки папок
+@interface FolderTreeCollection : NSObject {
+    NSMutableArray* collection;
+}
+
+
+-(void) addToFolderToTree: (FolderModel*) folder;
+-(NSMutableArray*) getFolderTree;
+
+@end
+@implementation FolderTreeCollection
+
+-(void) addToFolderToTree: (FolderModel*) folder {
+    [collection addObject: folder];
+}
+
+-(NSMutableArray*) getFolderTree {
+    return collection;
+}
+
+@end
+
 
 // Методы Wrike
 @interface WrikeMethods : NSObject
