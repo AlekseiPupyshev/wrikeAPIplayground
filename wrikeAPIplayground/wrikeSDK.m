@@ -7,138 +7,44 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "wrikeModels.h"
 
-// Модель акаунта
-@interface AccountModel : NSObject {
-    NSString* ID;
-    NSString* name;
-    NSString* rootFolderId;
-    NSString* recycleBinId;
+NSString* stringData = @"{ \"kind\": \"task\", \"data\": [ { \"id\": \"IEAAALNZKQAC2XZF\", \"title\": \"Test task\", \"description\": \"\", \"briefDescription\": \"\", \"parentsIds\": [ \"IEAAALNZI4AC2XZD\"], \"createdData\": \"2015-06-11T18:09:40Z\", \"updatedData\": \"2015-06-11T18:09:43Z\" } ] } }";
+
+@implementation TaskCollection
+
+- (void) fetch {
+    NSData* responseData = [stringData dataUsingEncoding: NSUTF8StringEncoding];
+    NSDictionary* responseDict = [NSJSONSerialization JSONObjectWithData: responseData options: NSJSONReadingMutableContainers error: nil];
+    
+    if([NSJSONSerialization isValidJSONObject: responseDict]) {
+        NSArray* array = [responseDict objectForKey: @"data"];
+        
+        [array enumerateObjectsUsingBlock: ^(NSDictionary* object, NSUInteger idx, BOOL* stop) {
+            Task* task = [[Task alloc] init];
+            task._id = [object objectForKey: @"id"];
+            task.title = [object objectForKey: @"title"];
+            task.Description = [object objectForKey: @"description"];
+            task.briefDescription = [object objectForKey: @"briefDescription"];
+            // Должен получать массив, получает строку !!!
+            task.parentsIds = [object objectForKey: @"parentsIds"];
+            // !!!
+            task.updatedDate = [object objectForKey: @"createdData"];
+            task.createdDate = [object objectForKey: @"updatedData"];
+            
+            [_items addObject: task];
+            NSLog(@"%@", [task title]);
+        }];
+    }
 }
-
--(void) initWithID: (NSString*) ID
-          withName: (NSString*) name
-  withRootFolderId: (NSString*) rootFolderId
-  withRecycleBinId: (NSString*) recycleBinId;
+/*
+ Сначала создается объект NSData с JSON данными, затем
+ создается словарь.
+ После проверяем JSON на валидность и через блоки/замыкания 
+ заполняем наш Task. Потом добовляем в массив
+*/
 
 @end
-@implementation AccountModel
-
--(void) initWithID: (NSString *) IDM
-          withName: (NSString *) nameM
-  withRootFolderId: (NSString *) rootFolderIdM
-  withRecycleBinId: (NSString *) recycleBinIdM {
-    ID = IDM;
-    name = nameM;
-    rootFolderId = rootFolderIdM;
-    recycleBinId = recycleBinIdM;
-}
-
-@end
-
-// Коллекция аккаунтов
-@interface AccountsCollection : NSObject {
-    NSMutableArray* collection;
-}
-
--(void) addAccount: (AccountModel*) account;
--(NSMutableArray*) getAccounts;
-
-@end
-@implementation AccountsCollection
-
--(void) addAccount: (AccountModel*) account {
-    [collection addObject: account];
-}
-
--(NSMutableArray*) getAccounts {
-    return collection;
-}
-
-@end
-
-// Коллекция ветки папок
-@interface FolderTreeCollection : NSObject {
-    NSMutableArray* collection;
-}
-
--(void) addToFolderToTree: (FolderModel*) folder;
--(NSMutableArray*) getFolderTree;
-
-@end
-@implementation FolderTreeCollection
-
--(void) addToFolderToTree: (FolderModel*) folder {
-    [collection addObject: folder];
-}
-
--(NSMutableArray*) getFolderTree {
-    return collection;
-}
-
-@end
-
-// Модель папки
-@interface FolderModel : NSObject {
-    NSString* ID;
-    NSString* title;
-    NSString* description;
-    NSArray* sharedIDs;
-    NSArray* parentIDs;
-    NSString* scope;
-    NSURL* permalink;
-    NSString* workflowID;
-    NSArray* childIDs;
-}
-
--(void) initFullWithID: (NSString*) IDM
-             withTitle: (NSString*) titleM
-       withDescription: (NSString*) descriptionM
-         withSharedIDs: (NSArray*) sharedIDsM
-         withParentIDs: (NSArray*) parentIDsM
-             withScope: (NSString*) scopeM
-         withPermalink: (NSURL*) permalinkM
-        withWorkflowID: (NSString*) workflowIDM
-          withChildIDs: (NSArray*) childIDsM;
-
--(void) initForTreeWithID: (NSString*) IDM
-                withTitle: (NSString*) titleM
-             withChildIDs: (NSArray*) childIDsM
-                withScope: (NSString*) scopeM;
-@end
-@implementation FolderModel
-
--(void) initWithID: (NSString *) IDM
-         withTitle: (NSString *) titleM
-   withDescription: (NSString *) descriptionM
-     withSharedIDs: (NSArray *) sharedIDsM
-     withParentIDs: (NSArray *) parentIDsM
-         withScope: (NSString *) scopeM
-     withPermalink: (NSURL *) permalinkM
-    withWorkflowID: (NSString *) workflowIDM
-      withChildIDs: (NSArray *) childIDsM {
-    ID = IDM;
-    title = titleM;
-    description = descriptionM;
-    [sharedIDs arrayByAddingObjectsFromArray: sharedIDsM];
-    [parentIDs arrayByAddingObjectsFromArray: parentIDsM];
-    scope = scopeM;
-    permalink = permalinkM;
-    workflowID = workflowIDM;
-    childIDs = childIDsM;
-}
-
-@end
-
-// Методы Wrike
-@interface WrikeMethods : NSObject
-
-+(AccountsCollection*) getAccounts;
-+(FolderTreeCollection*) getFolderTree;
-+(FolderModel*) getFolder: (NSString*) ID;
-
-@end
-
 
 @interface OAuth2Credentials : NSObject {
     NSString *accesToken;
@@ -154,3 +60,7 @@
 
 @implementation OAuth2Credentials
 @end
+
+
+
+
