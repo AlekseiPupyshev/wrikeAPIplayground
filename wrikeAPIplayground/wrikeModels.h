@@ -41,8 +41,7 @@
 
 @property (nonatomic) NSMutableArray *items;
 
-// Получает все таски и сохраняет в items.
--(void) fetch;
+-(void) fetch; // Получает все таски и сохраняет в items.
 
 @end
 
