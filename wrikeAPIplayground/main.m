@@ -8,21 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import <AFNetworking.h>
+#import "wrikeSDK.m"
 
 int main(int argc, const char * argv[]) {
-    @autoreleasepool {
-        // insert code here...
-        
-        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-        [manager GET:@"http://example.com/resources.json" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
-            NSLog(@"JSON: %@", responseObject);
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"Error: %@", error);
-        }];
-        
-        
-        
-        NSLog(@"Hello, World!");
-    }
+    TaskCollection* coll;
+    [coll fetch];
     return 0;
 }
