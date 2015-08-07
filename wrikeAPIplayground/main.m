@@ -8,10 +8,11 @@
 
 #import <Foundation/Foundation.h>
 #import <AFNetworking.h>
-#import "wrikeSDK.m"
+#import "wrikeModels.h"
 
 int main(int argc, const char * argv[]) {
-    TaskCollection* coll;
+    TaskCollection* coll = [[TaskCollection alloc] init];
     [coll fetch];
+    NSLog(@"HELLO");
     return 0;
 }

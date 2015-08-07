@@ -14,6 +14,9 @@ NSString* stringData = @"{ \"kind\": \"task\", \"data\": [ { \"id\": \"IEAAALNZK
 @implementation TaskCollection
 
 - (void) fetch {
+    /*
+     curl -g -X GET -H 'Authorization: bearer <access_token>' 'https://www.wrike.com/api/v3/tasks?metadata=
+     */
     NSData* responseData = [stringData dataUsingEncoding: NSUTF8StringEncoding];
     NSDictionary* responseDict = [NSJSONSerialization JSONObjectWithData: responseData options: NSJSONReadingMutableContainers error: nil];
     
@@ -49,6 +52,8 @@ NSString* stringData = @"{ \"kind\": \"task\", \"data\": [ { \"id\": \"IEAAALNZK
 
 -(void) sync {
     // Вначале нужно подрузить дату с _id экземпляра
+    // (NSString)* fromID = __id;
+    
     NSData* responseData = [stringData dataUsingEncoding: NSUTF8StringEncoding];
     NSDictionary* responseDict = [NSJSONSerialization JSONObjectWithData: responseData options: NSJSONReadingMutableContainers error: nil];
     
@@ -80,9 +85,23 @@ NSString* stringData = @"{ \"kind\": \"task\", \"data\": [ { \"id\": \"IEAAALNZK
 */
 @end
 
+@implementation Vomment
+
+- (void) createCommentWithText: (NSString *)text andWithTaskId: (NSString *)taskId {
+    /*
+     curl -g -X POST -H 'Authorization: bearer <access_token>' -d 'plainText=true&text=Task comment' 'https://www.wrike.com/api/v3/tasks/IEAAALNZKQAC2XZH/comments'
+    */
+}
+
+@end
+
 @implementation CommentsCollection
 
 - (void) fetchCommentsByTaskId: (NSString *) taskId {
+    /*
+     curl -g -X GET -H 'Authorization: bearer <access_token>' 'https://www.wrike.com/api/v3/tasks/IEAAALNZKQAC2XZH/comments?plainText=true'
+    */
+    
     NSData* responseData = [stringData dataUsingEncoding: NSUTF8StringEncoding];
     NSDictionary* responseDict = [NSJSONSerialization JSONObjectWithData: responseData options: NSJSONReadingMutableContainers error: nil];
     
