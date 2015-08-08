@@ -52,12 +52,17 @@
 @property (nonatomic) NSString *text;
 @property (nonatomic) NSString *updatedDate;
 @property (nonatomic) NSString *taskId;
+
 - (void) createCommentWithText: (NSString*) text andWithTaskId: (NSString*) taskId;
+
 @end
 
 @interface CommentsCollection : NSArray
-@property (nonatomic) NSArray *items;
-+ (void) fetchCommentsByTaskId: (NSString*) taskId;
+
+@property (nonatomic) NSMutableArray *items;
+
+- (void) fetchCommentsByTaskId: (NSString*) taskId;
+
 @end
 
 
