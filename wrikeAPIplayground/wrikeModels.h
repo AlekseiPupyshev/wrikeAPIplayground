@@ -11,6 +11,23 @@
 
 #endif
 
+extern NSString* globalToken;
+
+@interface OAuth2Credentials : NSObject
+
+@property (readwrite, nonatomic) NSString* clientID;
+@property (nonatomic) NSString* clientSecret;
+@property (nonatomic) NSString* accessCode;
+@property (nonatomic) NSString* accessToken;
+@property (nonatomic) NSString* refreshToken;
+
+- (void) initWithClientID: (NSString*) cID
+         withClientSecret: (NSString*) cSecret
+           withAccessCode: (NSString*) aCode;
+- (void) getAccessToken;
+- (void) makeRefreshToken;
+@end
+
 @interface Folder : NSObject
 
 @property (nonatomic) NSString *_id;
@@ -56,27 +73,11 @@
 
 @end
 
-@interface CommentsCollection : NSArray
+@interface CommentsCollection : NSObject
 
 @property (nonatomic) NSMutableArray *items;
 
 - (void) fetchCommentsByTaskId: (NSString*) taskId;
 
 @end
-
-@interface OAuth2Credentials : NSObject <NSURLConnectionDelegate>
-
-@property (readwrite, nonatomic) NSString* clientID;
-@property (nonatomic) NSString* clientSecret;
-@property (nonatomic) NSString* accessCode;
-@property (nonatomic) NSString* accessToken;
-@property (nonatomic) NSString* refreshToken;
-
-- (void) initWithClientID: (NSString*) cID
-         withClientSecret: (NSString*) cSecret
-           withAccessCode: (NSString*) aCode;
-- (void) getAccessToken;
-- (void) refreshToken;
-@end
-
 

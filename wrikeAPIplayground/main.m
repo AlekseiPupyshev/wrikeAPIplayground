@@ -15,12 +15,14 @@
 int main(int argc, const char * argv[]) {
     NSString* clientID = @"XcanYk6P";
     NSString* clientSecret = @"QBDzdgWrMVktBi5QrNqeIyEoRKqJCLzzJ9IoAwu8E6Vm0CuPWiGjAGREbWgr69lC";
-    NSString* code = @"NhEKWIXvnDiPKEnnsygtJtVRJBKtJElJX7PW86OeOpPae5E2Vj6qb11RVbInGukRb-N";
+    NSString* code = @"9ZkDKfDMoi29D2djAluGnERJghO3aISo5vcymTtC8mAVfWnD18857x17KCYq7Poa-N";
     
     OAuth2Credentials *OAuth = [[OAuth2Credentials alloc] init];
     [OAuth initWithClientID: clientID withClientSecret: clientSecret withAccessCode: code];
     [OAuth getAccessToken];
     
+    TaskCollection* coll = [[TaskCollection alloc] init];
+    [coll fetch];
     
     return 0;
 }
