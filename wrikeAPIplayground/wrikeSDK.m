@@ -127,11 +127,17 @@ NSString* stringData = @"{ \"kind\": \"task\", \"data\": [ { \"id\": \"IEAAALNZK
 
 @implementation OAuth2Credentials
 
-- (NSString*) getAccessCredentials: (NSString *) clientIDM
-                                  : (NSString *) clientSecretM
-                                  : (NSString *) accessCodeM {
+- (void) initWithClientID: (NSString *) cID
+         withClientSecret: (NSString *) cSecret
+           withAccessCode: (NSString *) aCode {
+    _clientID = cID;
+    _clientSecret = cSecret;
+    _accessCode = aCode;
+}
+
+- (void) getAccessToken {
     NSString* response = @"https://www.wrike.com/oauth2/token";
-    NSString *post = [NSString stringWithFormat: @"client_id=%@&client_secret=%@&grant_type=authorization_code&code=%@", clientIDM, clientSecretM, accessCodeM];
+    NSString *post = [NSString stringWithFormat: @"client_id=%@&client_secret=%@&grant_type=authorization_code&code=%@", _clientID, _clientSecret, _accessCode];
     NSData *postData = [post dataUsingEncoding: NSASCIIStringEncoding allowLossyConversion: YES];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     
@@ -140,10 +146,33 @@ NSString* stringData = @"{ \"kind\": \"task\", \"data\": [ { \"id\": \"IEAAALNZK
     [request setValue: [NSString stringWithFormat: @"%lu", (unsigned long)[post length]] forHTTPHeaderField: @"Content-Lenght"];
     [request setHTTPBody: postData];
     
-    NSData *oData = [NSURLConnection sendSynchronousRequest: request returningResponse: nil error: nil];
-    NSDictionary *oDict = [NSJSONSerialization JSONObjectWithData: oData options: NSJSONReadingMutableContainers error: nil];
+    NSData *responseData = [NSURLConnection sendSynchronousRequest: request returningResponse: nil error: nil];
+    NSDictionary *responseDict = [NSJSONSerialization JSONObjectWithData: responseData options: NSJSONReadingMutableContainers error: nil];
     
-    return [[NSString alloc] initWithData: oData encoding: NSUTF8StringEncoding];
+    if([NSJSONSerialization isValidJSONObject: responseDict]) {
+        _accessToken = [responseDict objectForKey: @"access_token"];
+        _refreshToken = [responseDict objectForKey: @"refresh_token"];
+    }
+}
+
+- (void) refreshToken {
+    NSString* response = @"https://www.wrike.com/oauth2/token";
+    NSString *post = [NSString stringWithFormat: @"client_id=%@&client_secret=%@&grant_type=refresh_token&refresh_token=%@", _clientID, _clientSecret, _refreshToken];
+    NSData *postData = [post dataUsingEncoding: NSASCIIStringEncoding allowLossyConversion: YES];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    
+    [request setURL: [NSURL URLWithString: response]];
+    [request setHTTPMethod: @"POST"];
+    [request setValue: [NSString stringWithFormat: @"%lu", (unsigned long)[post length]] forHTTPHeaderField: @"Content-Lenght"];
+    [request setHTTPBody: postData];
+    
+    NSData *responseData = [NSURLConnection sendSynchronousRequest: request returningResponse: nil error: nil];
+    NSDictionary *responseDict = [NSJSONSerialization JSONObjectWithData: responseData options: NSJSONReadingMutableContainers error: nil];
+    
+    if([NSJSONSerialization isValidJSONObject: responseDict]) {
+        _accessToken = [responseDict objectForKey: @"access_token"];
+        _refreshToken = [responseDict objectForKey: @"refresh_token"];
+    }
 }
 @end
 

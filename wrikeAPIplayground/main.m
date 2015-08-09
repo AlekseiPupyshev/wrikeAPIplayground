@@ -18,15 +18,8 @@ int main(int argc, const char * argv[]) {
     NSString* code = @"NhEKWIXvnDiPKEnnsygtJtVRJBKtJElJX7PW86OeOpPae5E2Vj6qb11RVbInGukRb-N";
     
     OAuth2Credentials *OAuth = [[OAuth2Credentials alloc] init];
-    NSString* responseStrData = [OAuth getAccessCredentials: clientID : clientSecret : code];
-    NSData* responseData = [responseStrData dataUsingEncoding: NSUTF8StringEncoding];
-    NSDictionary* responseDict = [NSJSONSerialization JSONObjectWithData: responseData options: NSJSONReadingMutableContainers error: nil];
-    
-    if([NSJSONSerialization isValidJSONObject: responseDict]) {
-        NSLog(@"AccessToken: %@ \n ExpiresIn: %@ \n RefreshToken: %@", [responseDict objectForKey: @"access_token"], [responseDict objectForKey: @"expires_in"], [responseDict objectForKey: @"refresh_token"]);
-    } else {
-        NSLog(@"JSON NON VALID");
-    }
+    [OAuth initWithClientID: clientID withClientSecret: clientSecret withAccessCode: code];
+    [OAuth getAccessToken];
     
     
     return 0;
