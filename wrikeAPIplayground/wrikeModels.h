@@ -65,4 +65,15 @@
 
 @end
 
+@interface OAuth2Credentials : NSObject <NSURLConnectionDelegate> {
+    NSString* clientID;
+    NSString* clientSecret;
+    NSString* accessCode;
+}
+
+- (NSString*) getAccessCredentials: (NSString*) clientIDM
+                                  : (NSString*) clientSecretM
+                                  : (NSString*) accessCodeM;
+@end
+
 

@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import "wrikeModels.h"
 
+// A8U2Boa0QMnXxp4ETm6gFSt1GW8UCWInMX86AfpJrbwBurUwx6NtqGhQEodTmhd3-N
+
 NSString* stringData = @"{ \"kind\": \"task\", \"data\": [ { \"id\": \"IEAAALNZKQAC2XZF\", \"title\": \"Test task\", \"description\": \"\", \"briefDescription\": \"\", \"parentsIds\": [ \"IEAAALNZI4AC2XZD\"], \"createdData\": \"2015-06-11T18:09:40Z\", \"updatedData\": \"2015-06-11T18:09:43Z\" } ] } }";
 
 @implementation TaskCollection
@@ -123,21 +125,25 @@ NSString* stringData = @"{ \"kind\": \"task\", \"data\": [ { \"id\": \"IEAAALNZK
 
 @end
 
-@interface OAuth2Credentials : NSObject {
-    NSString *accesToken;
-    NSString *refreshToken;
-    NSString *clientID;
-    NSString *clientSecret;
-}
-
-+ (void)initWithAccessCode: (NSString *) code withClientID: (NSString *) clientID
-                withSecret: (NSString *) clientSecret;
-+ (void)refreshToken;
-@end
-
 @implementation OAuth2Credentials
+
+- (NSString*) getAccessCredentials: (NSString *) clientIDM
+                                  : (NSString *) clientSecretM
+                                  : (NSString *) accessCodeM {
+    NSString* response = @"https://www.wrike.com/oauth2/token";
+    NSString *post = [NSString stringWithFormat: @"client_id=%@&client_secret=%@&grant_type=authorization_code&code=%@", clientIDM, clientSecretM, accessCodeM];
+    NSData *postData = [post dataUsingEncoding: NSASCIIStringEncoding allowLossyConversion: YES];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    
+    [request setURL: [NSURL URLWithString: response]];
+    [request setHTTPMethod: @"POST"];
+    [request setValue: [NSString stringWithFormat: @"%lu", (unsigned long)[post length]] forHTTPHeaderField: @"Content-Lenght"];
+    [request setHTTPBody: postData];
+    
+    NSData *oData = [NSURLConnection sendSynchronousRequest: request returningResponse: nil error: nil];
+    NSDictionary *oDict = [NSJSONSerialization JSONObjectWithData: oData options: NSJSONReadingMutableContainers error: nil];
+    
+    return [[NSString alloc] initWithData: oData encoding: NSUTF8StringEncoding];
+}
 @end
-
-
-
 
