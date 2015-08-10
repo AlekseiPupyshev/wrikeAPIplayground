@@ -42,7 +42,7 @@ extern NSString* globalToken;
 
 @property (nonatomic) NSString* _id;
 @property (nonatomic) NSString *title;
-@property (nonatomic) NSString *Description; // Тут проблема "Readwrite" т.к description зарезервированное слово
+@property (nonatomic) NSString *taskDescription; // Тут проблема "Readwrite" т.к description зарезервированное слово
 @property (nonatomic) NSString *briefDescription;
 @property (nonatomic) NSArray *parentsIds; // тут фолдеры которые помечают таску (например теги языков программирования)
 @property (nonatomic) NSString *updatedDate;
@@ -62,7 +62,7 @@ extern NSString* globalToken;
 @end
 
 // Самый важный класс для приложения quizir
-@interface Vomment : NSObject
+@interface Comment : NSObject
 @property (nonatomic) NSString *_id;
 @property (nonatomic) NSString *authorId;
 @property (nonatomic) NSString *text;

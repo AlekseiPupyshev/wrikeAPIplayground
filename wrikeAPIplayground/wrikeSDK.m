@@ -18,8 +18,9 @@ NSString* globalToken;
     
     [request setHTTPMethod: @"GET"];
     [request setHTTPShouldHandleCookies: NO];
-    //[request setURL: [NSURL URLWithString: [NSString stringWithFormat: @"https://www.wrike.com/api/v3/tasks?token=%@", globalToken]]];
-    //[request setValue: globalToken forHTTPHeaderField: @"access_token"];
+    [request setURL: [NSURL URLWithString: @"https://www.wrike.com/api/v3/tasks"]];
+    NSString* headerTokenField = [NSString stringWithFormat: @"bearer @", globalToken];
+    [request setValue: headerTokenField forHTTPHeaderField: @"Authorization"];
     
     NSData* responseData = [NSURLConnection sendSynchronousRequest: request returningResponse: nil error: nil];
     NSDictionary* responseDict = [NSJSONSerialization JSONObjectWithData: responseData options: NSJSONReadingMutableContainers error: nil];
@@ -31,7 +32,7 @@ NSString* globalToken;
             Task* task = [[Task alloc] init];
             task._id = [object objectForKey: @"id"];
             task.title = [object objectForKey: @"title"];
-            task.Description = [object objectForKey: @"description"];
+            task.taskDescription = [object objectForKey: @"description"];
             task.briefDescription = [object objectForKey: @"briefDescription"];
             // Должен получать массив, получает строку !!!
             //task.parentsIds = [object objectForKey: @"parentsIds"];
@@ -73,7 +74,7 @@ NSString* globalToken;
         [array enumerateObjectsUsingBlock: ^(NSDictionary* object, NSUInteger idx, BOOL* stop) {
             __id = [object objectForKey: @"id"];
             _title = [object objectForKey: @"title"];
-            _Description = [object objectForKey: @"description"];
+            _taskDescription = [object objectForKey: @"description"];
             _briefDescription = [object objectForKey: @"briefDescription"];
             // Должен получать массив, получает строку !!!
             //_parentsIds = [object objectForKey: @"parentsIds"];
@@ -95,7 +96,7 @@ NSString* globalToken;
 */
 @end
 
-@implementation Vomment
+@implementation Comment
 
 - (void) createCommentWithText: (NSString *) text andWithTaskId: (NSString *) taskId {
     NSString* response = [NSString stringWithFormat: @"https://www.wrike.com/api/v3/tasks/%@/comments", taskId];
