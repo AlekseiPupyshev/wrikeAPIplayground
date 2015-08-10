@@ -15,7 +15,7 @@ extern NSString* globalToken;
 
 @interface OAuth2Credentials : NSObject
 
-@property (readwrite, nonatomic) NSString* clientID;
+@property (nonatomic) NSString* clientID;
 @property (nonatomic) NSString* clientSecret;
 @property (nonatomic) NSString* accessCode;
 @property (nonatomic) NSString* accessToken;
@@ -26,6 +26,13 @@ extern NSString* globalToken;
            withAccessCode: (NSString*) aCode;
 - (void) getAccessToken;
 - (void) makeRefreshToken;
+@end
+
+@interface Requests : NSObject
+
+- (NSData*) makeGETRequest: (NSString*) requestURL : (NSString*) params;
+- (NSData*) makePOSTRequest: (NSString*) requestURL : (NSString*) params;
+
 @end
 
 @interface Folder : NSObject

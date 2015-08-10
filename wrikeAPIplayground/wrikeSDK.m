@@ -11,36 +11,61 @@
 
 NSString* globalToken;
 
-@implementation TaskCollection
+@implementation Requests
 
-- (void) fetch {
+- (NSData*) makeGETRequest: (NSString*) requestURL : (NSString*) params {
     NSMutableURLRequest* request = [[NSMutableURLRequest alloc] init];
     
     [request setHTTPMethod: @"GET"];
-    [request setHTTPShouldHandleCookies: NO];
-    //[request setURL: [NSURL URLWithString: [NSString stringWithFormat: @"https://www.wrike.com/api/v3/tasks?token=%@", globalToken]]];
-    //[request setValue: globalToken forHTTPHeaderField: @"access_token"];
+    [request setHTTPShouldHandleCookies: YES];
+    if([params isEqualToString: @""]) [request setURL: [NSURL URLWithString: requestURL]];
+    else [request setURL: [NSURL URLWithString: [NSString stringWithFormat: @"%@?%@", requestURL, params]]];
+    NSString* headerTokenField = [NSString stringWithFormat: @"bearer %@", globalToken];
+    [request addValue: headerTokenField forHTTPHeaderField: @"Authorization"];
     
     NSData* responseData = [NSURLConnection sendSynchronousRequest: request returningResponse: nil error: nil];
+    return responseData;
+}
+
+- (NSData*) makePOSTRequest: (NSString *) requestURL : (NSString *) params {
+    NSData* postData = [params dataUsingEncoding: NSASCIIStringEncoding allowLossyConversion: YES];
+    
+    NSMutableURLRequest* request = [[NSMutableURLRequest alloc] init];
+    
+    [request setURL: [NSURL URLWithString: [NSString stringWithFormat: @"%@?%@", requestURL, params]]];
+    [request setHTTPMethod: @"POST"];
+    [request setValue: [NSString stringWithFormat: @"%lu", (unsigned long)[params length]] forHTTPHeaderField: @"Content-Lenght"];
+    [request setHTTPBody: postData];
+    
+    NSData *responseData = [NSURLConnection sendSynchronousRequest: request returningResponse: nil error: nil];
+    return responseData;
+}
+
+@end
+
+@implementation TaskCollection
+
+- (void) fetch {
+    Requests* request = [[Requests alloc] init];
+
+    NSData* responseData = [request makeGETRequest: @"https://www.wrike.com/api/v3/tasks" : @""];
     NSDictionary* responseDict = [NSJSONSerialization JSONObjectWithData: responseData options: NSJSONReadingMutableContainers error: nil];
     
     if([NSJSONSerialization isValidJSONObject: responseDict]) {
         NSArray* array = [responseDict objectForKey: @"data"];
-        NSLog(@"Normal JSON");
+        
         [array enumerateObjectsUsingBlock: ^(NSDictionary* object, NSUInteger idx, BOOL* stop) {
             Task* task = [[Task alloc] init];
+            
             task._id = [object objectForKey: @"id"];
             task.title = [object objectForKey: @"title"];
             task.Description = [object objectForKey: @"description"];
             task.briefDescription = [object objectForKey: @"briefDescription"];
-            // Должен получать массив, получает строку !!!
-            //task.parentsIds = [object objectForKey: @"parentsIds"];
-            // !!!
+            //task.parentsIds = pIds;
             task.updatedDate = [object objectForKey: @"createdData"];
             task.createdDate = [object objectForKey: @"updatedData"];
             
             [_items addObject: task];
-            NSLog(@"%@", task.title);
         }];
     }
     
@@ -58,14 +83,12 @@ NSString* globalToken;
 @implementation Task
 
 -(void) sync {
-    NSMutableURLRequest* request = [[NSMutableURLRequest alloc] init];
+    Requests* request = [[Requests alloc] init];
     
-    [request setHTTPMethod: @"GET"];
-    [request setURL: [NSURL URLWithString: [NSString stringWithFormat: @"https://www.wrike.com/api/v3/tasks/", __id]]];
-    [request setValue: globalToken forKey: @"accessToken"];
-    
-    NSData* responseData = [NSURLConnection sendSynchronousRequest: request returningResponse: nil error: nil];
+    NSData* responseData = [request makeGETRequest: @"https://www.wrike.com/api/v3/tasks/" : __id];
     NSDictionary* responseDict = [NSJSONSerialization JSONObjectWithData: responseData options: NSJSONReadingMutableContainers error: nil];
+    
+    NSLog(@"%@", [[NSString alloc] initWithData: responseData encoding: NSUTF8StringEncoding]);
     
     if([NSJSONSerialization isValidJSONObject: responseDict]) {
         NSArray* array = [responseDict objectForKey: @"data"];
@@ -98,18 +121,9 @@ NSString* globalToken;
 @implementation Vomment
 
 - (void) createCommentWithText: (NSString *) text andWithTaskId: (NSString *) taskId {
-    NSString* response = [NSString stringWithFormat: @"https://www.wrike.com/api/v3/tasks/%@/comments", taskId];
-    NSString* post = [NSString stringWithFormat: @"plainText=true&text=%@", text];
-    NSData* postData = [post dataUsingEncoding: NSASCIIStringEncoding allowLossyConversion: YES];
-    NSMutableURLRequest* request = [[NSMutableURLRequest alloc] init];
-     
-    [request setURL: [NSURL URLWithString: response]];
-    [request setHTTPMethod: @"POST"];
-    [request setValue: [NSString stringWithFormat: @"%lu", (unsigned long)[post length]] forHTTPHeaderField: @"Content-Lenght"];
-    [request setValue: globalToken forKey: @"access_token"];
-    [request setHTTPBody: postData];
+    Requests* request = [[Requests alloc] init];
     
-    NSData* responseData = [NSURLConnection sendSynchronousRequest: request returningResponse: nil error: nil];
+    NSData* responseData = [request makePOSTRequest: [NSString stringWithFormat: @"https://www.wrike.com/api/v3/tasks/%@/comments", taskId] : [NSString stringWithFormat: @"plainText=true&text=%@", text]];
     NSDictionary* responseDict = [NSJSONSerialization JSONObjectWithData: responseData options: NSJSONReadingMutableContainers error: nil];
     
     if([NSJSONSerialization isValidJSONObject: responseDict]) {
@@ -123,6 +137,7 @@ NSString* globalToken;
             _taskId = [object objectForKey: @"taskId"];
         }];
     }
+    NSLog(@"DATA: %@", [[NSString alloc] initWithData: responseData encoding: NSUTF8StringEncoding]);
 }
 
 @end
@@ -130,13 +145,9 @@ NSString* globalToken;
 @implementation CommentsCollection
 
 - (void) fetchCommentsByTaskId: (NSString *) taskId {
-    NSMutableURLRequest* request = [[NSMutableURLRequest alloc] init];
+    Requests* request = [[Requests alloc] init];
     
-    [request setHTTPMethod: @"GET"];
-    [request setURL: [NSURL URLWithString:[NSString stringWithFormat: @"https://www.wrike.com/api/v3/tasks/%@/comments?plainText=true", taskId]]];
-    [request setValue: globalToken forHTTPHeaderField: @"access_token"];
-    
-    NSData* responseData = [NSURLConnection sendSynchronousRequest: request returningResponse: nil error: nil];
+    NSData* responseData = [request makeGETRequest: @"https://www.wrike.com/api/v3/comments/" : [NSString stringWithFormat: @"%@?plainText=true", taskId]];
     NSDictionary* responseDict = [NSJSONSerialization JSONObjectWithData: responseData options: NSJSONReadingMutableContainers error: nil];
     
     if([NSJSONSerialization isValidJSONObject: responseDict]) {
@@ -168,17 +179,9 @@ NSString* globalToken;
 }
 
 - (void) getAccessToken {
-    NSString* response = @"https://www.wrike.com/oauth2/token";
-    NSString *post = [NSString stringWithFormat: @"client_id=%@&client_secret=%@&grant_type=authorization_code&code=%@", _clientID, _clientSecret, _accessCode];
-    NSData *postData = [post dataUsingEncoding: NSASCIIStringEncoding allowLossyConversion: YES];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    Requests* request = [[Requests alloc] init];
     
-    [request setURL: [NSURL URLWithString: response]];
-    [request setHTTPMethod: @"POST"];
-    [request setValue: [NSString stringWithFormat: @"%lu", (unsigned long)[post length]] forHTTPHeaderField: @"Content-Lenght"];
-    [request setHTTPBody: postData];
-    
-    NSData *responseData = [NSURLConnection sendSynchronousRequest: request returningResponse: nil error: nil];
+    NSData* responseData = [request makePOSTRequest: @"https://www.wrike.com/oauth2/token" : [NSString stringWithFormat: @"client_id=%@&client_secret=%@&grant_type=authorization_code&code=%@", _clientID, _clientSecret, _accessCode]];
     NSDictionary *responseDict = [NSJSONSerialization JSONObjectWithData: responseData options: NSJSONReadingMutableContainers error: nil];
     
     if([NSJSONSerialization isValidJSONObject: responseDict]) {
@@ -189,17 +192,9 @@ NSString* globalToken;
 }
 
 - (void) refreshToken {
-    NSString* response = @"https://www.wrike.com/oauth2/token";
-    NSString *post = [NSString stringWithFormat: @"client_id=%@&client_secret=%@&grant_type=refresh_token&refresh_token=%@", _clientID, _clientSecret, _refreshToken];
-    NSData *postData = [post dataUsingEncoding: NSASCIIStringEncoding allowLossyConversion: YES];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    Requests* request = [[Requests alloc] init];
     
-    [request setURL: [NSURL URLWithString: response]];
-    [request setHTTPMethod: @"POST"];
-    [request setValue: [NSString stringWithFormat: @"%lu", (unsigned long)[post length]] forHTTPHeaderField: @"Content-Lenght"];
-    [request setHTTPBody: postData];
-    
-    NSData *responseData = [NSURLConnection sendSynchronousRequest: request returningResponse: nil error: nil];
+    NSData* responseData = [request makePOSTRequest: @"https://www.wrike.com/oauth2/token" : [NSString stringWithFormat: @"client_id=%@&client_secret=%@&grant_type=refresh_token&refresh_token=%@", _clientID, _clientSecret, _refreshToken]];
     NSDictionary *responseDict = [NSJSONSerialization JSONObjectWithData: responseData options: NSJSONReadingMutableContainers error: nil];
     
     if([NSJSONSerialization isValidJSONObject: responseDict]) {
