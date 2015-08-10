@@ -9,8 +9,24 @@
 #ifndef wrikeAPIplayground_wrikeModels_h
 #define wrikeAPIplayground_wrikeModels_h
 
-
 #endif
+
+extern NSString* globalToken;
+
+@interface OAuth2Credentials : NSObject
+
+@property (readwrite, nonatomic) NSString* clientID;
+@property (nonatomic) NSString* clientSecret;
+@property (nonatomic) NSString* accessCode;
+@property (nonatomic) NSString* accessToken;
+@property (nonatomic) NSString* refreshToken;
+
+- (void) initWithClientID: (NSString*) cID
+         withClientSecret: (NSString*) cSecret
+           withAccessCode: (NSString*) aCode;
+- (void) getAccessToken;
+- (void) makeRefreshToken;
+@end
 
 @interface Folder : NSObject
 
@@ -22,11 +38,11 @@
 // тут еще нужно проверить что возвращвется указатель на объект а не сам объект
 @end
 
-@interface Task  : NSObject // работает с __attribute__((visibility("default"))) но без переменных
+@interface Task  : NSObject
 
 @property (nonatomic) NSString* _id;
 @property (nonatomic) NSString *title;
-@property (nonatomic) NSString *Description; // Тут проблема "Readwrite"
+@property (nonatomic) NSString *Description; // Тут проблема "Readwrite" т.к description зарезервированное слово
 @property (nonatomic) NSString *briefDescription;
 @property (nonatomic) NSArray *parentsIds; // тут фолдеры которые помечают таску (например теги языков программирования)
 @property (nonatomic) NSString *updatedDate;
@@ -57,12 +73,11 @@
 
 @end
 
-@interface CommentsCollection : NSArray
+@interface CommentsCollection : NSObject
 
 @property (nonatomic) NSMutableArray *items;
 
 - (void) fetchCommentsByTaskId: (NSString*) taskId;
 
 @end
-
 
